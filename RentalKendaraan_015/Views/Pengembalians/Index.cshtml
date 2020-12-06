@@ -1,0 +1,64 @@
+﻿@model PaginatedList<RentalKendaraan_015.Models.Pengembalian>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Pengembalian</h2>
+
+<p>
+    <a asp-action="Create">Tambah Data</a>
+</p>
+
+@using (Html.BeginForm("Index", "Pengembalian", FormMethod.Get))
+{
+    <p>
+        Denda: @Html.DropDownList("kmbl", "pilih Denda")
+        Cari Data : @Html.TextBox("searchString")
+        <input type="submit" value="Filter" />
+    </p>
+
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParam"]" asp-route-currentFilter="@ViewData["currentFilter"]">Tanggal Pengembalian</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DendaSortParam"]" asp-route-currentFilter="@ViewData["currentFilter"]">Tanggal Denda</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["KondisiSortParam"]" asp-route-currentFilter="@ViewData["currentFilter"]">Kondisi</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParam"]" asp-route-currentFilter="@ViewData["currentFilter"]">ID Peminjam</a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TglPengembalian)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Denda)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdKondisiNavigation.NamaKondisi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdPeminjamanNavigation.IdPeminjaman)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdPengembalian">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdPengembalian">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdPengembalian">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

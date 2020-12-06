@@ -1,0 +1,90 @@
+﻿@model PaginatedList<RentalKendaraan_015.Models.Customer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Data Customer</h2>
+
+<p>
+    <a asp-action="Create">Tambah Data Customer</a>
+</p>
+
+@using (Html.BeginForm("Index", "Customer", FormMethod.Get))
+{
+    <p>
+        Alamat: @Html.DropDownList("cust", "pilih Alamat")
+        Cari Data : @Html.TextBox("searchString")
+        <input type="submit" value="Filter" />
+    </p>
+
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @*Html.DisplayName("Nama Customer")*@
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-currentFilter="@ViewData["currentFilter"]">Nama Customer</a>
+            </th>
+            <th>
+                @*Html.DisplayName("NIK")*@
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NIKSortParam"]" asp-route-currentFilter="@ViewData["currentFilter"]">NIK</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AlamatSortParam"]" asp-route-currentFilter="@ViewData["currentFilter"]">Alamat</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["HPSortParam"]" asp-route-currentFilter="@ViewData["currentFilter"]">Nomor Hp</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["GenderSortParam"]" asp-route-currentFilter="@ViewData["currentFilter"]">Gender</a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NamaCustomer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nik)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Alamat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoHp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdGenderNavigation.NamaGender)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdCustomer">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdCustomer">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdCustomer">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["currentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentfilter="@ViewData["currentFilter"]"
+   class="btn btn-default @prevDisabled">Previous</a>
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["currentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentfilter="@ViewData["currentFilter"]"
+   class="btn btn-default @nextDisabled">Next</a>
+
