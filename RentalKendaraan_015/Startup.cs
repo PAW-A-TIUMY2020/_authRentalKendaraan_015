@@ -13,6 +13,7 @@ using RentalKendaraan_015.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RentalKendaraan_015.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace RentalKendaraan_015
 {
@@ -36,11 +37,26 @@ namespace RentalKendaraan_015
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddDbContext<Models.Rental_KendaraanContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultUI()
-            .AddEntityFrameworkStores<Rental_KendaraanContext>().AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<Rental_KendaraanContext>().AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("readonlypolicy", builder => builder.RequireRole("Admin", "Manager", "Kasir"));
+                options.AddPolicy("writepolicy", builder => builder.RequireRole("Admin", "Kasir"));
+                options.AddPolicy("editpolicy", builder => builder.RequireRole("Admin", "Kasir"));
+                options.AddPolicy("deletepolicy", builder => builder.RequireRole("Admin", "Kasir"));
+            });
+            services.AddScoped<Peminjaman>();
+            services.AddScoped<Pengembalian>();
+
         }
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
